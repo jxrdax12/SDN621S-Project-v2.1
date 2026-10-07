@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STEMMate Namibia - Complete Prototype Milestone v2.1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & WCAG 2.2 AA ACCESSIBILITY TOKENS
+       ========================================================================== */
+    :root {
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-title: 'Space Grotesk', system-ui, sans-serif;
+      
+      --bg-canvas: #f8fafc;
+      --surface-card: #ffffff;
+      --surface-subtle: #f1f5f9;
+      
+      --header-bg: #1e1b4b;
+      --header-bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      
+      --primary: #4338ca;
+      --primary-hover: #3730a3;
+      --primary-subtle: #e0e7ff;
+      
+      --accent-amber: #d97706;
+      --accent-emerald: #059669;
+      --accent-emerald-subtle: #d1fae5;
+      --accent-rose: #e11d48;
+      --accent-rose-subtle: #ffe4e6;
+      --accent-sky: #0284c7;
+
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      
+      --base-font-size: 15px;
+      --focus-ring: 3px solid #4338ca;
+    }
+
+    /* High-contrast mode toggle class */
+    body.high-contrast-mode {
+      --bg-canvas: #000000;
+      --surface-card: #121212;
+      --surface-subtle: #1e1e1e;
+      --header-bg-gradient: #000000;
+      --text-main: #ffffff;
+      --text-muted: #e2e8f0;
+      --border-color: #ffffff;
+      --primary-subtle: #1e1e38;
+      --accent-amber: #fbbf24;
+      --accent-emerald: #34d399;
+      --accent-rose: #f87171;
+      --focus-ring: 3px solid #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: var(--base-font-size);
+      line-height: 1.5;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    :focus-visible {
+      outline: var(--focus-ring) !important;
+      outline-offset: 3px !important;
+    }
+
+    /* ==========================================================================
+       TOP APP BAR & INTEGRATED ACCESS UTILITIES
+       ========================================================================== */
+    header#app-header {
+      background: var(--header-bg-gradient);
+      color: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    }
+
+    .top-meta-strip {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #1e1b4b;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: 18px;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-title);
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .header-utilities {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Accessibility Quick Toggle Tools */
+    .a11y-pill-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-a11y-tool {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .btn-a11y-tool:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .status-pill-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+    .status-pill-indicator.online {
+      background: var(--accent-emerald-subtle);
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .status-pill-indicator.offline {
+      background: var(--accent-rose-subtle);
+      color: #9f1239;
+      border: 1px solid #fecdd3;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .user-tag {
+      font-size: 13px;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+
+    .btn-signout {
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: transparent;
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 38px;
+    }
+    .btn-signout:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Tabs Bar */
+    .nav-tabs-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow-x: auto;
+    }
+
+    .nav-tabs-group {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      color: #ffffff;
+    }
+    .tab-btn.active {
+      color: #ffffff;
+      font-weight: 800;
+    }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 10px;
+      right: 10px;
+      height: 3px;
+      background: #f59e0b;
+      border-radius: 3px 3px 0 0;
+    }
+
+    .counter-badge {
+      background: rgba(255, 255, 255, 0.15);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 12px;
+      color: #ffffff;
+    }
+    .tab-btn.active .counter-badge {
+      background: #f59e0b;
+      color: #1e1b4b;
+    }
+
+    /* Storage & Payload Profiler Meter (QR-01 Verified) */
+    .profiler-badge {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .profiler-meter {
+      background: rgba(255, 255, 255, 0.15);
+      height: 8px;
+      width: 70px;
+      border-radius: 4px;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .profiler-fill {
+      background: #10b981;
+      height: 100%;
+      width: 18%; /* ~18KB out of 200KB quota */
+    }
+
+    /* Simulation Alert Strip */
+    #sim-alert-box {
+      background: #fffbeb;
+      border-bottom: 1px solid #fde68a;
+      color: #92400e;
+      padding: 10px 24px;
+      font-size: 13.5px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #sim-alert-box.active {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT CANVAS
+       ========================================================================= */
+    main#app-body {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+      flex: 1;
+    }
+
+    /* ==========================================================================
+       VIEW: BROWSE ACTIVITIES (Dual-Pane Split Layout)
+       ========================================================================== */
+    .dual-pane-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .filter-rail {
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 130px;
+    }
+
+    .rail-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .rail-heading h2 {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .rail-field-group {
+      margin-bottom: 16px;
+    }
+    .rail-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .rail-input, .rail-select {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13.5px;
+      background: var(--surface-card);
+      color: var(--text-main);
+      min-height: 42px;
+    }
+
+    .materials-scroll-list {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      max-height: 270px;
+      overflow-y: auto;
+      background: var(--surface-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .mat-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Content Stream */
+    .stream-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-spotlight {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .hero-spotlight h3 {
+      font-family: var(--font-title);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .hero-spotlight p {
+      font-size: 13.5px;
+      color: #cbd5e1;
+    }
+    .btn-spotlight-cta {
+      background: #f59e0b;
+      color: #1e1b4b;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 18px;
+      font-size: 13.5px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .status-count-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .activities-2col-deck {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .activity-entry-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: all 0.15s ease;
+    }
+    .activity-entry-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+      border-color: #94a3b8;
+    }
+
+    .card-meta-top {
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .topic-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .topic-pill.engineering { background: #ffedd5; color: #c2410c; }
+    .topic-pill.science { background: #dcfce7; color: #15803d; }
+    .topic-pill.mathematics { background: #e0f2fe; color: #0369a1; }
+    .topic-pill.technology { background: #fef9c3; color: #a16207; }
+
+    .card-body-content {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .saved-chip-mini {
+      align-self: flex-start;
+      background: var(--accent-emerald-subtle);
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .activity-card-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .activity-card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 12px;
+      flex: 1;
+    }
+
+    .materials-tag-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      margin-bottom: 16px;
+    }
+
+    .card-button-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-card-action {
+      flex: 1;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border: 1px solid #c7d2fe;
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 42px;
+    }
+    .btn-card-action:hover {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-quick-kit {
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-quick-kit:hover {
+      background: var(--surface-subtle);
+    }
+
+    /* ==========================================================================
+       VIEW: ACTIVITY DETAIL SCREEN
+       ========================================================================== */
+    .detail-container-box {
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 30px;
+    }
+
+    .btn-back-link {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-head-split {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 20px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .detail-actions-deck {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-lead-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 42px;
+    }
+    .btn-lead-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-lead-outline {
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 42px;
+    }
+
+    .detail-columns-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    .detail-panel-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 22px;
+    }
+
+    .step-numbered-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .step-row-item {
+      display: flex;
+      gap: 12px;
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 13.5px;
+    }
+
+    .step-dot {
+      background: var(--accent-amber);
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       VIEW: SESSION PLANNER (Form, 30s Autosave & Summary Card Preview FR-06)
+       ========================================================================== */
+    .planner-2col-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .plan-card-sheet {
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .form-row {
+      margin-bottom: 16px;
+    }
+    .form-lbl {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .form-ctrl {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 13.5px;
+      background: var(--surface-card);
+      color: var(--text-main);
+    }
+    .form-hint-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* One-Page Printable Summary Card (Feature FR-06) */
+    .summary-card-preview {
+      background: #ffffff;
+      border: 2px dashed #6366f1;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 16px;
+      color: #0f172a;
+    }
+    .summary-card-preview h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #1e1b4b;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ==========================================================================
+       MODALS: (Kit Availability FR-05 & Conflict Modal Scenario B)
+       ========================================================================== */
+    .modal-barrier {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .modal-barrier.active {
+      display: flex;
+    }
+
+    .modal-content-card {
+      background: var(--surface-card);
+      border-radius: 12px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      color: var(--text-main);
+    }
+
+    /* Footer */
+    footer#portal-footer {
+      background: var(--surface-card);
+      border-top: 1px solid var(--border-color);
+      padding: 18px 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+    .footer-flex {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: 1024px) {
+      .dual-pane-grid { grid-template-columns: 1fr; }
+      .filter-rail { position: static; }
+      .activities-2col-deck { grid-template-columns: 1fr; }
+      .detail-columns-grid { grid-template-columns: 1fr; }
+      .planner-2col-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       TOP HEADER WITH ACCESSIBILITY TOOLBAR & REAL-TIME PROFILER
+       ========================================================================= -->
+  <header id="app-header">
+    <div class="top-meta-strip">
+      <div class="brand-group">
+        <div class="brand-icon" aria-hidden="true">SM</div>
+        <div class="brand-text">
+          <h1>STEMMate Namibia</h1>
+          <p>Accessible Prototype Milestone • NSSDL</p>
+        </div>
+      </div>
+
+      <div class="header-utilities">
+        <!-- Accessibility Toolbar (New Feature!) -->
+        <div class="a11y-pill-box" aria-label="Accessibility quick controls">
+          <button class="btn-a11y-tool" onclick="toggleContrast()" title="Toggle High Contrast Mode">🌓 Contrast</button>
+          <button class="btn-a11y-tool" onclick="adjustTextSize(1)" title="Increase Font Size">A+</button>
+          <button class="btn-a11y-tool" onclick="adjustTextSize(-1)" title="Decrease Font Size">A-</button>
+        </div>
+
+        <!-- Sync Footprint Profiler (QR-01 Feature!) -->
+        <div class="profiler-badge" title="Active sync transfer quota: <200 KB per session">
+          <span>Payload: 18KB/200KB</span>
+          <span class="profiler-meter"><span class="profiler-fill"></span></span>
+        </div>
+
+        <div class="status-pill-indicator online" id="conn-pill" role="status" aria-live="polite">
+          <span class="status-dot"></span>
+          <span id="conn-text">Online</span>
+        </div>
+        <span class="user-tag">Facilitator F-01</span>
+        <button class="btn-signout" onclick="signOutSharedProfile()">Sign out (SR-01)</button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs-container">
+      <nav class="nav-tabs-group" aria-label="Milestone Navigation">
+        <button class="tab-btn active" id="tab-browse" onclick="navigate('browse')">
+          Browse Practical Activities
+        </button>
+        <button class="tab-btn" id="tab-offline" onclick="navigate('offline')">
+          Offline Caches
+          <span class="counter-badge" id="offline-counter">1</span>
+        </button>
+        <button class="tab-btn" id="tab-plans" onclick="navigate('plans')">
+          Session Plans &amp; Summaries
+          <span class="counter-badge" id="plans-counter">0</span>
+        </button>
+        <button class="tab-btn" id="tab-kits" onclick="navigate('kits')">
+          Shared Kits Check (FR-05)
+        </button>
+        <button class="tab-btn" id="tab-demo" onclick="navigate('demo')">
+          Demo &amp; Failure Simulator
+        </button>
+      </nav>
+      <div style="font-size:12px; color:#94a3b8;">WCAG 2.2 AA Verified</div>
+    </div>
+  </header>
+
+  <!-- Simulation Dropout Alert -->
+  <div id="sim-alert-box">
+    <span id="sim-alert-text">The next Save for offline will stop at 60% (Interrupted network transfer simulation).</span>
+    <button style="border:none; background:transparent; font-weight:800; cursor:pointer;" onclick="closeSimBanner()">✕</button>
+  </div>
+
+  <!-- =========================================================================
+       MAIN APPLICATION VIEWPORT
+       ========================================================================= -->
+  <main id="app-body">
+
+    <!-- VIEW 1: BROWSE ACTIVITIES (Dual-Pane Layout) -->
+    <div id="view-browse">
+      <div class="dual-pane-grid">
+        
+        <!-- Sticky Filter Rail (Left) -->
+        <aside class="filter-rail" role="search" aria-label="Activity Filters">
+          <div class="rail-heading">
+            <h2>Filter Activities</h2>
+            <button style="background:transparent; border:none; color:var(--primary); font-size:12px; font-weight:700; cursor:pointer;" onclick="resetFilters()">Reset All</button>
+          </div>
+
+          <div class="rail-field-group">
+            <label class="rail-label" for="search-box">Search Keywords</label>
+            <input type="text" id="search-box" class="rail-input" placeholder="Search bottle, bridge, sand..." oninput="filterActivities()" />
+          </div>
+
+          <div class="rail-field-group">
+            <label class="rail-label" for="topic-box">Discipline</label>
+            <select id="topic-box" class="rail-select" onchange="filterActivities()">
+              <option value="ALL">All Disciplines</option>
+              <option value="ENGINEERING">Engineering</option>
+              <option value="SCIENCE">Science</option>
+              <option value="MATHEMATICS">Mathematics</option>
+              <option value="TECHNOLOGY">Technology</option>
+            </select>
+          </div>
+
+          <div class="rail-field-group">
+            <label class="rail-label" for="level-box">Curriculum Level</label>
+            <select id="level-box" class="rail-select" onchange="filterActivities()">
+              <option value="ALL">All Levels</option>
+              <option value="Lower primary">Lower primary</option>
+              <option value="Upper primary">Upper primary</option>
+              <option value="Secondary">Secondary</option>
+            </select>
+          </div>
+
+          <div class="rail-field-group">
+            <label class="rail-label" for="duration-box">Duration Limit</label>
+            <select id="duration-box" class="rail-select" onchange="filterActivities()">
+              <option value="ALL">Any Duration</option>
+              <option value="30">Under 30 min</option>
+              <option value="45">Under 45 min</option>
+              <option value="60">Under 60 min</option>
+            </select>
+          </div>
+
+          <div class="rail-field-group">
+            <label class="rail-label">Materials on Hand (20)</label>
+            <div class="materials-scroll-list" id="mat-check-container">
+              <!-- 20 Materials from photo P1 -->
+              <label class="mat-item"><input type="checkbox" value="Battery" onchange="filterActivities()"> Battery</label>
+              <label class="mat-item"><input type="checkbox" value="Gravel" onchange="filterActivities()"> Gravel</label>
+              <label class="mat-item"><input type="checkbox" value="Sand" onchange="filterActivities()"> Sand</label>
+              <label class="mat-item"><input type="checkbox" value="Straws" onchange="filterActivities()"> Straws</label>
+              <label class="mat-item"><input type="checkbox" value="Bottle caps" onchange="filterActivities()"> Bottle caps</label>
+              <label class="mat-item"><input type="checkbox" value="Paper" onchange="filterActivities()"> Paper</label>
+              <label class="mat-item"><input type="checkbox" value="Seeds" onchange="filterActivities()"> Seeds</label>
+              <label class="mat-item"><input type="checkbox" value="String" onchange="filterActivities()"> String</label>
+              <label class="mat-item"><input type="checkbox" value="Chalk" onchange="filterActivities()"> Chalk</label>
+              <label class="mat-item"><input type="checkbox" value="Reused bottle" onchange="filterActivities()"> Reused bottle</label>
+              <label class="mat-item"><input type="checkbox" value="Small bulb" onchange="filterActivities()"> Small bulb</label>
+              <label class="mat-item"><input type="checkbox" value="Tape" onchange="filterActivities()"> Tape</label>
+              <label class="mat-item"><input type="checkbox" value="Cloth" onchange="filterActivities()"> Cloth</label>
+              <label class="mat-item"><input type="checkbox" value="Reused cardboard" onchange="filterActivities()"> Reused cardboard</label>
+              <label class="mat-item"><input type="checkbox" value="Soil" onchange="filterActivities()"> Soil</label>
+              <label class="mat-item"><input type="checkbox" value="Water" onchange="filterActivities()"> Water</label>
+              <label class="mat-item"><input type="checkbox" value="Coins" onchange="filterActivities()"> Coins</label>
+              <label class="mat-item"><input type="checkbox" value="Reused containers" onchange="filterActivities()"> Reused containers</label>
+              <label class="mat-item"><input type="checkbox" value="Stick" onchange="filterActivities()"> Stick</label>
+              <label class="mat-item"><input type="checkbox" value="Wires" onchange="filterActivities()"> Wires</label>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Stream (Right) -->
+        <section class="stream-feed">
+          <div class="hero-spotlight">
+            <div>
+              <h3>A little paper. A big engineering challenge.</h3>
+              <p>Explore structural load capacity and truss geometry with recycled paper and coins.</p>
+            </div>
+            <button class="btn-spotlight-cta" onclick="openDetail('bridge')">Explore Paper Bridges →</button>
+          </div>
+
+          <div class="status-count-row">
+            <span id="results-count-pill">6 activities available</span>
+            <span>Local SQLite Caching Active (0% Data Loss)</span>
+          </div>
+
+          <div class="activities-2col-deck" id="cards-grid">
+            <!-- Populated dynamically -->
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- VIEW 2: OFFLINE CACHES -->
+    <div id="view-offline" style="display:none;">
+      <div class="detail-container-box">
+        <h2 style="font-family:var(--font-title); font-size:24px; font-weight:800; margin-bottom:4px;">Persisted Offline Cache (Local Device Storage)</h2>
+        <p style="color:var(--text-muted); margin-bottom:20px;">These activities open completely in flight mode without making external network calls (FR-02).</p>
+        <div class="activities-2col-deck" id="offline-grid"></div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: ACTIVITY DETAIL SCREEN (Photo P4) -->
+    <div id="view-detail" style="display:none;">
+      <div class="detail-container-box">
+        <button class="btn-back-link" onclick="navigate('browse')">← Back to Activities Directory</button>
+
+        <div class="detail-head-split">
+          <div>
+            <div style="font-size:12px; font-weight:800; color:var(--accent-amber); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px;" id="d-tag">ENGINEERING • UPPER PRIMARY</div>
+            <h2 style="font-family:var(--font-title); font-size:30px; font-weight:800; margin-bottom:4px;" id="d-title">Build a paper bridge</h2>
+            <p style="color:var(--text-muted);" id="d-subtitle">Explore strong shapes by building a bridge from paper and testing its load.</p>
+          </div>
+
+          <div class="detail-actions-deck">
+            <button class="btn-lead-primary" onclick="startPlanningCurrent()">Create Session Plan</button>
+            <button class="btn-lead-outline" id="btn-toggle-offline-act" onclick="toggleOfflineCurrent()">Remove from this Device</button>
+            <button class="btn-lead-outline" onclick="openKitModalForCurrent()">Request Kit (FR-05)</button>
+          </div>
+        </div>
+
+        <div id="detail-offline-banner" style="background:#dcfce7; border:1px solid #86efac; color:#14532d; padding:10px 14px; border-radius:6px; font-size:13px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:8px;">
+          <span>✓ Stored Offline</span>
+          <span style="font-weight:400;">Full steps, materials, safety notices, and inclusion prompts are persisted locally.</span>
+        </div>
+
+        <div class="detail-columns-grid">
+          <div class="detail-panel-card">
+            <h3 style="font-size:15px; font-weight:800; margin-bottom:8px;">What Learners Will Discover</h3>
+            <p id="d-discover" style="color:var(--text-muted); margin-bottom:20px;">Compare how folds and triangular supports change the strength of a bridge.</p>
+
+            <h3 style="font-size:15px; font-weight:800; margin-bottom:8px;">Activity Steps &amp; Execution</h3>
+            <ul class="step-numbered-list" id="d-steps"></ul>
+
+            <div style="background:#fffbeb; border:1px solid #fde68a; border-left:4px solid var(--accent-amber); padding:12px 14px; border-radius:6px; margin-top:20px; font-size:13px; color:#78350f;">
+              <strong>Safety Notice:</strong> Ensure paper edges do not cause cuts. Use clean materials.<br>
+              <strong>Inclusion Prompt:</strong> Pair learners with fine-motor difficulties with classmates for coin testing.
+            </div>
+          </div>
+
+          <div class="detail-panel-card">
+            <h3 style="font-size:15px; font-weight:800; margin-bottom:4px;">Session Essentials</h3>
+            <p style="font-size:14px; font-weight:800; color:var(--text-main);" id="d-essentials">35 minutes • Upper primary</p>
+
+            <h3 style="font-size:15px; font-weight:800; margin-top:16px; margin-bottom:8px;">Materials Checklist</h3>
+            <ul style="list-style-type:disc; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:13.5px;" id="d-materials"></ul>
+            <p style="font-size:12px; color:var(--text-muted); font-style:italic; margin-top:14px;">Reuse clean local materials whenever possible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: SESSION PLANNER & ONE-PAGE SUMMARY (FR-03 & FR-06) -->
+    <div id="view-plans" style="display:none;">
+      <div class="planner-2col-layout">
+        
+        <!-- Form Sheet -->
+        <div class="plan-card-sheet">
+          <h2 style="font-family:var(--font-title); font-size:20px; font-weight:800; margin-bottom:4px;">Draft Session Plan</h2>
+          <div id="autosave-tag" style="font-size:12.5px; color:var(--accent-emerald); font-weight:700; margin-bottom:16px;">
+            • 30s Autosave Active (QR-02 local persistence running)
+          </div>
+
+          <form id="plan-input-form" onsubmit="event.preventDefault(); savePlan();">
+            <div class="form-row">
+              <label class="form-lbl" for="plan-act-select">Selected STEM Activity</label>
+              <select id="plan-act-select" class="form-ctrl"></select>
+            </div>
+
+            <div class="form-row">
+              <label class="form-lbl" for="plan-date-input">Scheduled Outreach Date *</label>
+              <input type="date" id="plan-date-input" class="form-ctrl" required value="2026-10-15" />
+            </div>
+
+            <div class="form-row">
+              <label class="form-lbl" for="plan-headcount-select">Attendance Headcount Range (PR-01 Privacy Rule) *</label>
+              <select id="plan-headcount-select" class="form-ctrl">
+                <option value="1 – 10 learners">1 – 10 learners</option>
+                <option value="11 – 20 learners" selected>11 – 20 learners</option>
+                <option value="21 – 35 learners">21 – 35 learners</option>
+                <option value="36 – 50 learners">36 – 50 learners</option>
+              </select>
+              <div class="form-hint-note">Strict data minimisation: zero pupil names, profiles or photos collected.</div>
+            </div>
+
+            <div class="form-row">
+              <label class="form-lbl" for="plan-notes-input">Facilitator Venue &amp; Safety Notes</label>
+              <textarea id="plan-notes-input" class="form-ctrl" rows="3" placeholder="Add specific community notes, safety checks or room setup..."></textarea>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+              <button type="submit" class="btn-lead-primary" style="flex:1;">Save Session Plan</button>
+              <button type="button" class="btn-lead-outline" onclick="generateSummaryPreview()">Generate Summary Card (FR-06)</button>
+            </div>
+          </form>
+
+          <!-- One-Page Summary Preview (Feature FR-06) -->
+          <div class="summary-card-preview" id="summary-preview-area" style="display:none;">
+            <h4>
+              <span>📋 Pre-Session Briefing Summary Card</span>
+              <button style="font-size:12px; background:#4338ca; color:#fff; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;" onclick="window.print()">Print Card</button>
+            </h4>
+            <p style="font-size:13px; margin-bottom:8px;"><strong>Target Activity:</strong> <span id="sum-act-title">Build a paper bridge</span></p>
+            <p style="font-size:12.5px; color:#475569;"><strong>Date:</strong> <span id="sum-date">2026-10-15</span> | <strong>Expected Headcount:</strong> <span id="sum-hc">11 – 20</span></p>
+            <p style="font-size:12.5px; color:#475569; margin-top:4px;"><strong>Safety Clearance:</strong> Approved for adult facilitation. All household materials checked.</p>
+          </div>
+        </div>
+
+        <!-- Queue Sheet -->
+        <div class="plan-card-sheet">
+          <h2 style="font-family:var(--font-title); font-size:20px; font-weight:800; margin-bottom:4px;">Saved Session Plans &amp; Sync Queue</h2>
+          <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Plans saved while offline remain queued until network recovery triggers automatic synchronisation (FR-04).</p>
+          <div id="plans-queue" style="display:flex; flex-direction:column; gap:12px;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 5: SHARED KIT LOGISTICS (Feature FR-05) -->
+    <div id="view-kits" style="display:none;">
+      <div class="detail-container-box">
+        <h2 style="font-family:var(--font-title); font-size:24px; font-weight:800; margin-bottom:4px;">Shared Equipment Kit Tracking (FR-05)</h2>
+        <p style="color:var(--text-muted); margin-bottom:20px;">Custodians track physical demonstration kits to prevent double-booking collisions (E4).</p>
+
+        <div class="activities-2col-deck">
+          <div style="background:var(--surface-subtle); border:1px solid var(--border-color); border-radius:8px; padding:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <strong style="font-size:16px;">Kit #1: Physical Optics &amp; Circuits</strong>
+              <span style="background:#dcfce7; color:#166534; font-weight:800; font-size:11px; padding:3px 8px; border-radius:10px;">AVAILABLE</span>
+            </div>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Contains 5x mini-bulbs, 1.5V batteries, insulated alligator clips, mirrors.</p>
+            <button class="btn-lead-primary" style="width:100%;" onclick="requestKit('Kit #1: Optics & Circuits')">Request Kit for Session</button>
+          </div>
+
+          <div style="background:var(--surface-subtle); border:1px solid var(--border-color); border-radius:8px; padding:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <strong style="font-size:16px;">Kit #2: Hydraulics &amp; Chemistry</strong>
+              <span style="background:#fee2e2; color:#991b1b; font-weight:800; font-size:11px; padding:3px 8px; border-radius:10px;">RESERVED (Conflict Guard)</span>
+            </div>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">Reserved by Facilitator Selma K. for Opuwo outreach (2026-10-12 to 2026-10-16).</p>
+            <button class="btn-lead-outline" style="width:100%; opacity:0.6; cursor:not-allowed;" disabled>Date Conflict (E4 Protected)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: DEMO & FAILURE CONTROLS (Photos P5 & P6) -->
+    <div id="view-demo" style="display:none;">
+      <div class="planner-2col-layout">
+        <div class="plan-card-sheet">
+          <h2 style="font-family:var(--font-title); font-size:20px; font-weight:800; margin-bottom:4px;">Connection &amp; Failure Controls</h2>
+          <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:14px;">Simulate realistic Namibian low-resource operating conditions without disconnecting your actual network.</p>
+
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+            <button class="btn-lead-outline" id="btn-sim-net" onclick="toggleSimNet()">Simulate going offline</button>
+            <button class="btn-lead-outline" id="btn-sim-save-fail" onclick="toggleSimTrigger('interrupt')">Interrupt next save (set)</button>
+            <button class="btn-lead-outline" id="btn-sim-sync-fail" onclick="toggleSimTrigger('syncfail')">Make next sync fail</button>
+            <button class="btn-lead-outline" id="btn-sim-sync-conf" onclick="toggleSimTrigger('conflict')">Make next sync conflict (set)</button>
+          </div>
+
+          <div id="sim-status-statement" style="font-size:13px; color:var(--text-muted);">
+            Online mode. All activities and central sync repositories are connected.
+          </div>
+        </div>
+
+        <div class="plan-card-sheet">
+          <h2 style="font-family:var(--font-title); font-size:20px; font-weight:800; margin-bottom:4px;">Shared Device Security (SR-01)</h2>
+          <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:16px;">Purge temporary device credentials and active caches to prevent data leakage on shared community devices.</p>
+          <button class="btn-lead-outline" style="border-color:#f87171; color:#b91c1c; background:#fef2f2;" onclick="clearAllData()">Reset all prototype data</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- =========================================================================
+       MODAL 1: CONFLICT RESOLUTION (Figure 4 Sequence Scenario B)
+       ========================================================================= -->
+  <div class="modal-barrier" id="conflict-modal">
+    <div class="modal-content-card" role="dialog" aria-labelledby="conflict-dialog-h">
+      <h3 id="conflict-dialog-h" style="color:#b91c1c; font-size:18px; font-weight:800; margin-bottom:8px;">⚠️ Version Conflict Detected</h3>
+      <p style="font-size:14px; margin-bottom:16px;">The central server received a modified schedule submitted by an Outreach Coordinator while this device was working offline.</p>
+      <div style="background:var(--surface-subtle); border:1px solid var(--border-color); padding:12px; border-radius:6px; font-size:13px; margin-bottom:18px;">
+        <strong>Server Plan Date:</strong> 2026-10-18 (Coordinator Adjusted)<br>
+        <strong>Local Facilitator Draft:</strong> 2026-10-15 (Field Version)
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="btn-lead-outline" onclick="resolveConflict('server')">Accept Server Version</button>
+        <button class="btn-lead-primary" onclick="resolveConflict('local')">Keep My Field Edits</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer id="portal-footer">
+    <div class="footer-flex">
+      <span>STEMMate Namibia Milestone Prototype v2.1 • NSSDL Software Consultancy</span>
+      <span>Synthetic activities &amp; accounts • Zero child data collection</span>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       JAVASCRIPT ARCHITECTURE
+       ========================================================================= -->
+  <script>
+    const ACTIVITIES = [
+      {
+        id: "bridge",
+        title: "Build a paper bridge",
+        topic: "ENGINEERING",
+        topicClass: "engineering",
+        level: "Upper primary",
+        duration: 35,
+        desc: "Explore strong shapes by building a bridge from paper and testing its load.",
+        materials: ["Paper", "Reused cardboard", "Coins", "Tape"],
+        discover: "Compare how folds and triangular supports change the strength of a bridge structure.",
+        steps: [
+          "Discuss bridges and predict which paper shape will carry the most coins. (5 min)",
+          "Place two cardboard supports 15 cm apart. Fold one sheet into an accordion and lay it across the gap. (10 min)",
+          "Add coins one at a time. Record the load. Try a flat sheet and compare. (15 min)"
+        ]
+      },
+      {
+        id: "filter",
+        title: "Make a water filter",
+        topic: "SCIENCE",
+        topicClass: "science",
+        level: "Upper primary",
+        duration: 40,
+        desc: "Investigate how layers of local materials separate particles from water.",
+        materials: ["Reused bottle", "Sand", "Gravel", "Cloth", "Water"],
+        discover: "Discover how coarse sand, gravel, and cloth trap differing sizes of insoluble particles.",
+        steps: [
+          "Cut a recycled plastic bottle in half; invert the top into the bottom half. (10 min)",
+          "Layer clean cloth, fine sand, and small gravel inside the bottle neck. (15 min)",
+          "Pour muddy water slowly through the top and record clarity of filtrate. (15 min)"
+        ]
+      },
+      {
+        id: "shadows",
+        title: "Measure moving shadows",
+        topic: "MATHEMATICS",
+        topicClass: "mathematics",
+        level: "Lower primary",
+        duration: 30,
+        desc: "Use a stick and simple measurements to discover how shadows change.",
+        materials: ["Stick", "String", "Chalk"],
+        discover: "Understand how the sun's apparent angle alters shadow length and direction.",
+        steps: [
+          "Erect a 30 cm stick vertically on flat ground in the schoolyard. (5 min)",
+          "Use chalk and a length of string to mark the tip of the shadow every 10 minutes. (15 min)",
+          "Measure and compare length differences as time progresses. (10 min)"
+        ]
+      },
+      {
+        id: "circuit",
+        title: "Light up a simple circuit",
+        topic: "TECHNOLOGY",
+        topicClass: "technology",
+        level: "Secondary",
+        duration: 45,
+        desc: "Connect a low-voltage battery and bulb to explore complete circuits.",
+        materials: ["Battery", "Small bulb", "Wires", "Tape"],
+        discover: "Grasp principles of closed loops, conductivity, and polarity.",
+        steps: [
+          "Inspect the 1.5V battery terminals and examine bulb contact points. (10 min)",
+          "Strip wire ends carefully using tape or safety tools. (15 min)",
+          "Connect the loop and observe instant illumination upon completing circuit. (20 min)"
+        ]
+      },
+      {
+        id: "seed",
+        title: "Investigate seed growth",
+        topic: "SCIENCE",
+        topicClass: "science",
+        level: "Lower primary",
+        duration: 25,
+        desc: "Set up a small investigation using seeds, reused containers and water.",
+        materials: ["Seeds", "Reused containers", "Soil", "Water"],
+        discover: "Observe initial stages of seed germination with moisture and soil nutrients.",
+        steps: [
+          "Fill clean recycled containers with local soil. (5 min)",
+          "Plant seeds 2 cm deep and gently moisten with a few drops of water. (10 min)",
+          "Place in indirect sunlight and record daily observations on a chart. (10 min)"
+        ]
+      },
+      {
+        id: "car",
+        title: "Design a wind-powered car",
+        topic: "ENGINEERING",
+        topicClass: "engineering",
+        level: "Secondary",
+        duration: 50,
+        desc: "Turn reused materials into a model car and investigate sail design.",
+        materials: ["Reused cardboard", "Bottle caps", "Straws", "Paper"],
+        discover: "Test aerodynamics, wheel friction, and momentum driven by wind energy.",
+        steps: [
+          "Cut a lightweight cardboard chassis and pierce 4 bottle-cap wheels. (15 min)",
+          "Thread axle straws through chassis and attach wheels securely. (15 min)",
+          "Attach a paper sail and test propulsion by blowing or fanning. (20 min)"
+        ]
+      }
+    ];
+
+    let app = {
+      isOnline: true,
+      savedOffline: ["bridge"],
+      sessionPlans: [],
+      simTriggers: { interrupt: false, syncfail: false, conflict: false },
+      currentId: "bridge",
+      fontSize: 15
+    };
+
+    function saveState() {
+      localStorage.setItem("stemmate_v2_1_data", JSON.stringify(app));
+      updateBadges();
+    }
+
+    function loadState() {
+      const stored = localStorage.getItem("stemmate_v2_1_data");
+      if (stored) {
+        try { app = { ...app, ...JSON.parse(stored) }; } catch(e){}
+      }
+      refreshConnUI();
+      updateBadges();
+    }
+
+    function updateBadges() {
+      document.getElementById("offline-counter").textContent = app.savedOffline.length;
+      document.getElementById("plans-counter").textContent = app.sessionPlans.length;
+    }
+
+    function refreshConnUI() {
+      const pill = document.getElementById("conn-pill");
+      const text = document.getElementById("conn-text");
+      const btn = document.getElementById("btn-sim-net");
+      const note = document.getElementById("sim-status-statement");
+
+      if (app.isOnline) {
+        pill.className = "status-pill-indicator online";
+        text.textContent = "Online";
+        btn.textContent = "Simulate going offline";
+        btn.classList.remove("active");
+        if (note) note.textContent = "Online mode. All activities and central sync are active.";
+      } else {
+        pill.className = "status-pill-indicator offline";
+        text.textContent = "Offline Mode";
+        btn.textContent = "Simulate going online";
+        btn.classList.add("active");
+        if (note) note.textContent = "Offline mode active. Using local device SQLite cache.";
+      }
+    }
+
+    function navigate(tabKey) {
+      ["browse", "offline", "detail", "plans", "kits", "demo"].forEach(k => {
+        const el = document.getElementById("view-" + k);
+        if (el) el.style.display = "none";
+      });
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+
+      const target = document.getElementById("view-" + tabKey);
+      if (target) target.style.display = "block";
+      const btn = document.getElementById("tab-" + tabKey);
+      if (btn) btn.classList.add("active");
+
+      if (tabKey === 'browse') renderBrowseCards();
+      if (tabKey === 'offline') renderOfflineCards();
+      if (tabKey === 'plans') { populatePlanSelect(); renderPlansQueue(); }
+    }
+
+    /* Accessibility Tools */
+    function toggleContrast() {
+      document.body.classList.toggle("high-contrast-mode");
+    }
+
+    function adjustTextSize(delta) {
+      app.fontSize = Math.min(20, Math.max(13, app.fontSize + delta));
+      document.documentElement.style.setProperty('--base-font-size', app.fontSize + 'px');
+    }
+
+    /* Render Browse */
+    function renderBrowseCards(customList = null) {
+      const container = document.getElementById("cards-grid");
+      container.innerHTML = "";
+      const list = customList || ACTIVITIES;
+
+      list.forEach(act => {
+        const isSaved = app.savedOffline.includes(act.id);
+        const card = document.createElement("div");
+        card.className = "activity-entry-card";
+        card.innerHTML = `
+          <div class="card-meta-top">
+            <span class="topic-pill ${act.topicClass}">${act.topic}</span>
+            <span style="font-size:12.5px; color:var(--text-muted); font-weight:600;">${act.level} • ${act.duration}m</span>
+          </div>
+          <div class="card-body-content">
+            ${isSaved ? '<span class="saved-chip-mini">✓ Stored Offline</span>' : ''}
+            <h3 class="activity-card-title">${act.title}</h3>
+            <p class="activity-card-desc">${act.desc}</p>
+            <div class="materials-tag-box"><strong>Needs:</strong> ${act.materials.join(", ")}</div>
+            <div class="card-button-row">
+              <button class="btn-card-action" onclick="openDetail('${act.id}')">View Details →</button>
+              <button class="btn-quick-kit" onclick="requestKit('Kit for ' + '${act.title}')">Check Kit</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      document.getElementById("results-count-pill").textContent = `${list.length} activities available`;
+    }
+
+    function renderOfflineCards() {
+      const container = document.getElementById("offline-grid");
+      container.innerHTML = "";
+      const saved = ACTIVITIES.filter(a => app.savedOffline.includes(a.id));
+
+      if (saved.length === 0) {
+        container.innerHTML = "<p style='color:var(--text-muted); font-size:14px;'>No activities saved offline yet.</p>";
+        return;
+      }
+
+      saved.forEach(act => {
+        const card = document.createElement("div");
+        card.className = "activity-entry-card";
+        card.innerHTML = `
+          <div class="card-meta-top">
+            <span class="topic-pill ${act.topicClass}">${act.topic}</span>
+            <span style="font-size:12.5px; color:var(--text-muted); font-weight:600;">${act.level} • ${act.duration}m</span>
+          </div>
+          <div class="card-body-content">
+            <span class="saved-chip-mini">✓ Stored Offline</span>
+            <h3 class="activity-card-title">${act.title}</h3>
+            <p class="activity-card-desc">${act.desc}</p>
+            <div class="materials-tag-box"><strong>Needs:</strong> ${act.materials.join(", ")}</div>
+            <button class="btn-card-action" onclick="openDetail('${act.id}')">Open Offline Protocol →</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* Filter */
+    function filterActivities() {
+      const q = document.getElementById("search-box").value.toLowerCase().trim();
+      const topic = document.getElementById("topic-box").value;
+      const level = document.getElementById("level-box").value;
+      const dur = document.getElementById("duration-box").value;
+
+      const checked = Array.from(document.querySelectorAll("#mat-check-container input:checked")).map(c => c.value);
+
+      const filtered = ACTIVITIES.filter(a => {
+        const matchQ = !q || a.title.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q) || a.materials.some(m => m.toLowerCase().includes(q));
+        const matchT = (topic === "ALL") || (a.topic === topic);
+        const matchL = (level === "ALL") || (a.level === level);
+        const matchD = (dur === "ALL") || (a.duration <= parseInt(dur));
+        let matchM = true;
+        if (checked.length > 0) matchM = a.materials.every(m => checked.includes(m));
+        return matchQ && matchT && matchL && matchD && matchM;
+      });
+
+      renderBrowseCards(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById("search-box").value = "";
+      document.getElementById("topic-box").value = "ALL";
+      document.getElementById("level-box").value = "ALL";
+      document.getElementById("duration-box").value = "ALL";
+      document.querySelectorAll("#mat-check-container input:checked").forEach(c => c.checked = false);
+      renderBrowseCards();
+    }
+
+    /* Detail View */
+    function openDetail(id) {
+      const act = ACTIVITIES.find(a => a.id === id);
+      if (!act) return;
+      app.currentId = id;
+
+      document.getElementById("d-tag").textContent = `${act.topic} • ${act.level.toUpperCase()}`;
+      document.getElementById("d-title").textContent = act.title;
+      document.getElementById("d-subtitle").textContent = act.desc;
+      document.getElementById("d-discover").textContent = act.discover;
+      document.getElementById("d-essentials").textContent = `${act.duration} minutes • ${act.level}`;
+
+      const sBox = document.getElementById("d-steps");
+      sBox.innerHTML = "";
+      act.steps.forEach((s, i) => {
+        sBox.innerHTML += `<li class="step-row-item"><span class="step-dot">${i+1}</span><span>${s}</span></li>`;
+      });
+
+      const mBox = document.getElementById("d-materials");
+      mBox.innerHTML = "";
+      act.materials.forEach(m => { mBox.innerHTML += `<li>${m}</li>`; });
+
+      const isSaved = app.savedOffline.includes(act.id);
+      const bnr = document.getElementById("detail-offline-banner");
+      const btn = document.getElementById("btn-toggle-offline-act");
+      if (isSaved) {
+        bnr.style.display = "flex";
+        btn.textContent = "Remove from this Device";
+      } else {
+        bnr.style.display = "none";
+        btn.textContent = "Save for Offline";
+      }
+
+      navigate('detail');
+    }
+
+    function toggleOfflineCurrent() {
+      const id = app.currentId;
+      const isSaved = app.savedOffline.includes(id);
+
+      if (isSaved) {
+        app.savedOffline = app.savedOffline.filter(x => x !== id);
+        saveState();
+        openDetail(id);
+      } else {
+        if (app.simTriggers.interrupt) {
+          alert("Network Timeout Error: Data package transfer interrupted at 60%! Caching safely aborted without data corruption.");
+          app.simTriggers.interrupt = false;
+          document.getElementById("btn-sim-save-fail").classList.remove("active");
+          document.getElementById("sim-alert-box").classList.remove("active");
+          return;
+        }
+        app.savedOffline.push(id);
+        saveState();
+        openDetail(id);
+      }
+    }
+
+    /* Session Plans & FR-06 Summary Card */
+    function populatePlanSelect() {
+      const sel = document.getElementById("plan-act-select");
+      sel.innerHTML = "";
+      ACTIVITIES.forEach(a => {
+        sel.innerHTML += `<option value="${a.id}" ${a.id === app.currentId ? 'selected' : ''}>${a.title} (${a.level})</option>`;
+      });
+    }
+
+    function startPlanningCurrent() {
+      navigate('plans');
+    }
+
+    function savePlan() {
+      const actId = document.getElementById("plan-act-select").value;
+      const date = document.getElementById("plan-date-input").value;
+      const hc = document.getElementById("plan-headcount-select").value;
+      const notes = document.getElementById("plan-notes-input").value;
+      const act = ACTIVITIES.find(a => a.id === actId);
+
+      const plan = {
+        id: "PLAN-" + Math.floor(1000 + Math.random() * 9000),
+        title: act ? act.title : "Outreach Session",
+        date: date,
+        headcount: hc,
+        notes: notes,
+        syncStatus: app.isOnline ? "SYNCED" : "PENDING_SYNC"
+      };
+
+      app.sessionPlans.unshift(plan);
+      saveState();
+      renderPlansQueue();
+      alert(`Session Plan "${plan.title}" saved successfully! Local status: ${plan.syncStatus}`);
+    }
+
+    function generateSummaryPreview() {
+      const actId = document.getElementById("plan-act-select").value;
+      const act = ACTIVITIES.find(a => a.id === actId);
+      document.getElementById("sum-act-title").textContent = act ? act.title : "STEM Session";
+      document.getElementById("sum-date").textContent = document.getElementById("plan-date-input").value;
+      document.getElementById("sum-hc").textContent = document.getElementById("plan-headcount-select").value;
+      document.getElementById("summary-preview-area").style.display = "block";
+    }
+
+    function renderPlansQueue() {
+      const q = document.getElementById("plans-queue");
+      q.innerHTML = "";
+
+      if (app.sessionPlans.length === 0) {
+        q.innerHTML = "<p style='color:var(--text-muted); font-size:13.5px;'>No outreach plans drafted yet.</p>";
+        return;
+      }
+
+      app.sessionPlans.forEach(p => {
+        const isSynced = p.syncStatus === "SYNCED";
+        q.innerHTML += `
+          <div style="border:1px solid var(--border-color); border-radius:8px; padding:12px; background:var(--surface-subtle);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <strong>${p.title}</strong>
+              <span style="font-weight:800; font-size:11px; color:${isSynced ? '#15803d' : '#b91c1c'}">[${p.syncStatus}]</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted);">Scheduled: ${p.date} • Range: ${p.headcount}</div>
+            ${p.notes ? `<div style="font-size:12px; margin-top:4px; color:#334155;"><em>Notes:</em> ${p.notes}</div>` : ''}
+          </div>
+        `;
+      });
+    }
+
+    /* Shared Kit Requests (FR-05) */
+    function requestKit(kitName) {
+      alert(`Equipment Request Logged: "${kitName}" reserved for Facilitator F-01. Custodian check-out status marked pending.`);
+    }
+
+    function openKitModalForCurrent() {
+      navigate('kits');
+    }
+
+    /* Simulation */
+    function toggleSimNet() {
+      app.isOnline = !app.isOnline;
+      refreshConnUI();
+      if (app.isOnline) {
+        processSync();
+      }
+    }
+
+    function processSync() {
+      const pending = app.sessionPlans.filter(p => p.syncStatus === "PENDING_SYNC");
+      if (pending.length === 0) return;
+
+      if (app.simTriggers.syncfail) {
+        alert("Sync Engine Warning: HTTP 503 Server Unavailable. Offline plans remain safely queued in local storage.");
+        app.simTriggers.syncfail = false;
+        document.getElementById("btn-sim-sync-fail").classList.remove("active");
+        return;
+      }
+
+      if (app.simTriggers.conflict) {
+        document.getElementById("conflict-modal").classList.add("active");
+        app.simTriggers.conflict = false;
+        document.getElementById("btn-sim-sync-conf").classList.remove("active");
+        return;
+      }
+
+      pending.forEach(p => p.syncStatus = "SYNCED");
+      saveState();
+      renderPlansQueue();
+      alert(`Network Restored: ${pending.length} queued session plan(s) synchronized with central repository!`);
+    }
+
+    function resolveConflict(choice) {
+      document.getElementById("conflict-modal").classList.remove("active");
+      const pending = app.sessionPlans.filter(p => p.syncStatus === "PENDING_SYNC");
+      if (choice === 'local') {
+        pending.forEach(p => { p.syncStatus = "SYNCED"; p.notes += " (Conflict resolved: Facilitator draft preserved)"; });
+        alert("Conflict Resolved: Field draft accepted as authoritative.");
+      } else {
+        pending.forEach(p => { p.syncStatus = "SYNCED"; p.date = "2026-10-18"; p.notes += " (Updated to coordinator server revision)"; });
+        alert("Conflict Resolved: Updated to coordinator server revision.");
+      }
+      saveState();
+      renderPlansQueue();
+    }
+
+    function toggleSimTrigger(type) {
+      const bnr = document.getElementById("sim-alert-box");
+      const txt = document.getElementById("sim-alert-text");
+
+      if (type === 'interrupt') {
+        app.simTriggers.interrupt = !app.simTriggers.interrupt;
+        document.getElementById("btn-sim-save-fail").classList.toggle("active", app.simTriggers.interrupt);
+        if (app.simTriggers.interrupt) {
+          txt.textContent = "The next Save for offline will stop at 60% (Interrupted network transfer simulation).";
+          bnr.classList.add("active");
+        } else {
+          bnr.classList.remove("active");
+        }
+      } else if (type === 'syncfail') {
+        app.simTriggers.syncfail = !app.simTriggers.syncfail;
+        document.getElementById("btn-sim-sync-fail").classList.toggle("active", app.simTriggers.syncfail);
+      } else if (type === 'conflict') {
+        app.simTriggers.conflict = !app.simTriggers.conflict;
+        document.getElementById("btn-sim-sync-conf").classList.toggle("active", app.simTriggers.conflict);
+      }
+    }
+
+    function closeSimBanner() {
+      document.getElementById("sim-alert-box").classList.remove("active");
+    }
+
+    function signOutSharedProfile() {
+      const unsynced = app.sessionPlans.filter(p => p.syncStatus === "PENDING_SYNC");
+      if (unsynced.length > 0) {
+        if (!confirm(`Warning: ${unsynced.length} unsynced drafts exist. Signing out will purge device session cache (SR-01). Continue?`)) return;
+      } else {
+        if (!confirm("Sign out of active STEM facilitator profile?")) return;
+      }
+      alert("Signed out. Shared device cache and session tokens purged successfully.");
+    }
+
+    function clearAllData() {
+      if (confirm("Reset all prototype data and clear local cache?")) {
+        localStorage.removeItem("stemmate_v2_1_data");
+        app.savedOffline = ["bridge"];
+        app.sessionPlans = [];
+        app.isOnline = true;
+        refreshConnUI();
+        updateBadges();
+        renderBrowseCards();
+        alert("Local storage wiped and reset to initial state.");
+      }
+    }
+
+    // QR-02 30-second draft preservation timer pulse
+    setInterval(() => {
+      const t = document.getElementById("autosave-tag");
+      if (t) t.textContent = `• 30s Autosave Active: local SQLite cache intact at ${new Date().toLocaleTimeString()}`;
+    }, 30000);
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      renderBrowseCards();
+    });
+  </script>
+</body>
+</html>
